@@ -3,8 +3,10 @@ import React from 'react';
 import { ApolloProvider } from 'react-apollo';
 import { persistCache } from 'apollo-cache-persist';
 import { AsyncStorage } from 'react-native';
+import { Provider } from 'mobx-react';
 import AppContainer from './navigation/AppContainer';
 import client from './client';
+import stores from './stores';
 
 class App extends React.Component {
   state = {
@@ -35,9 +37,11 @@ class App extends React.Component {
     }
 
     return (
-      <ApolloProvider client={client}>
-        <AppContainer />
-      </ApolloProvider>
+      <Provider stores={stores} >
+        <ApolloProvider client={client}>
+          <AppContainer />
+        </ApolloProvider>
+      </Provider>
     );
   }
 }

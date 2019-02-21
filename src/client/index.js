@@ -21,6 +21,7 @@ const httpLink = createHttpLink({
   uri: Platform.OS === 'android' ? SERVER_URI_ANDROID : SERVER_URI_IOS,
 });
 
+/* eslint-disable */ 
 const ws_client = new SubscriptionClient(Platform.OS === 'android' ? SERVER_SUB_ANDROID : SERVER_SUB_IOS, {
   reconnect: true,
 });
@@ -35,6 +36,7 @@ const terminatingLink = split(({ query }) => {
 wsLink,
 httpLink);
 
+/* eslint-disable */ 
 const networkLink = new ApolloLink((operation, forward) => {
   // operation.setContext({
   //   headers: {

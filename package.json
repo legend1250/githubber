@@ -7,7 +7,9 @@
     "test": "jest",
     "ios": "react-native run-ios",
     "android": "react-native run-android",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "watchmanclean": "watchman watch-del ./ && watchman watch-project ./",
+    "cleanreactcache": "rm -fr $TMPDIR/react-*"
   },
   "dependencies": {
     "apollo-cache-inmemory": "^1.4.2",

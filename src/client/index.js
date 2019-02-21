@@ -1,10 +1,13 @@
 import { ApolloClient } from 'apollo-client';
-import { ApolloLink } from 'apollo-link';
+import { ApolloLink, split } from 'apollo-link';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { withClientState } from 'apollo-link-state';
-import { GITHUB_TOKEN } from 'react-native-dotenv';
+import { GITHUB_TOKEN, GRAPHQL_SUBSCRIPTION } from 'react-native-dotenv';
 import { onError } from 'apollo-link-error';
+import { SubscriptionClient } from 'subscriptions-transport-ws'
+import { WebSocketLink } from 'apollo-link-ws'
+import { getMainDefinition } from 'apollo-utilities'
 
 const apolloCache = new InMemoryCache();
 
@@ -15,7 +18,22 @@ const httpLink = createHttpLink({
   uri: 'https://api.github.com/graphql',
 });
 
-const middlewareLink = new ApolloLink((operation, forward) => {
+const WS_ENDPOINT = GRAPHQL_SUBSCRIPTION || 'ws://localhost:8000/graphql'
+const ws_client = new SubscriptionClient(WS_ENDPOINT,{
+  reconnect: true
+})
+const wsLink = new WebSocketLink(ws_client)
+
+const terminatingLink = split(({ query }) => {
+  const { kind, operation } = getMainDefinition(query)
+  return (
+    kind === 'OperationDefinition' && operation === 'subscription'
+  )
+},
+wsLink,
+httpLink)
+
+const networkLink = new ApolloLink((operation, forward) => {
   operation.setContext({
     headers: {
       authorization: `Bearer ${GITHUB_TOKEN}`,
@@ -24,9 +42,6 @@ const middlewareLink = new ApolloLink((operation, forward) => {
 
   return forward(operation);
 });
-
-const networkLink = middlewareLink.concat(httpLink);
-
 /**
  * LOCAL DATA
  */
@@ -73,7 +88,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
  * APOLLO CLIENT
  */
 const client = new ApolloClient({
-  link: ApolloLink.from([stateLink, errorLink, networkLink]), // order matters
+  link: ApolloLink.from([stateLink, errorLink, networkLink, terminatingLink]), // order matters
   cache: apolloCache,
 });
 

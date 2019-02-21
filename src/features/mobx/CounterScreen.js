@@ -22,7 +22,7 @@ class CounterScreen extends React.Component {
     return (
       <StyledView>
         <PrimaryButton
-          title="Increase"
+          title="🚀 Up"
           onPress={this.handleChangeStore}
         />
         <Card>

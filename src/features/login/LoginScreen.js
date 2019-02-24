@@ -43,7 +43,7 @@ class LoginScreen extends Component {
 
   render() {
     const { username, password } = this.state
-    const { handleChangeUsername, handleChangePwd, onLoginPress, getMe } = this
+    const { handleChangeUsername, handleChangePwd, onLoginPress } = this
 
     return (
       <Mutation

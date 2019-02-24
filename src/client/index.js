@@ -64,7 +64,7 @@ const authMiddleware = setContext(async (req, { headers = {} }) => {
 const defaults = {
   session: {
     me: null,
-    __typename: 'Session'
+    __typename: 'User'
   }
 }
 
@@ -81,6 +81,7 @@ const resolvers = {
           __typename: 'Session'
         }
       }
+      // console.log('data: ', data)
       cache.writeData({ data })
       return null
     }
@@ -103,6 +104,7 @@ const stateLink = withClientState({
       username: String!
       email: String!
       role: [String]
+      departments: [String]
     }
   `
 })

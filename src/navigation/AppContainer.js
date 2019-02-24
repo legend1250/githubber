@@ -3,7 +3,7 @@ import HomeScreen from '../features/home/HomeScreen'
 import RepoSelectionScreen from '../features/repos/RepoSelectionScreen'
 import RepoListScreen from '../features/repos/RepoListScreen'
 import CounterScreen from '../features/mobx/CounterScreen'
-import LoginScreen from '../features/login/login'
+import LoginScreen from '../features/login/LoginScreen'
 import routes from './routes'
 
 const RootStack = createStackNavigator(

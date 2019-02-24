@@ -1,9 +1,10 @@
-import { Platform } from 'react-native'
+import { Platform, AsyncStorage } from 'react-native'
 import { ApolloClient } from 'apollo-client'
 import { ApolloLink, split } from 'apollo-link'
 import { createHttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { withClientState } from 'apollo-link-state'
+import { setContext } from 'apollo-link-context'
 import {
   SERVER_URI_ANDROID,
   SERVER_URI_IOS,
@@ -14,6 +15,8 @@ import { onError } from 'apollo-link-error'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
+import * as queries from './queries'
+import * as mutations from './mutations'
 
 const apolloCache = new InMemoryCache()
 
@@ -44,33 +47,57 @@ const terminatingLink = split(
 )
 
 /* eslint-disable */
-
-const networkLink = new ApolloLink((operation, forward) => {
-  // operation.setContext({
-  //   headers: {
-  //     'x-token': SERVER_URI,
-  //   },
-  // });
-
-  return forward(operation)
+// const networkLink = new ApolloLink((operation, forward) => {
+//   return AsyncStorage.getItem('auth.token').then((token) => {
+//     operation.setContext(async ({ headers = {} }) => {
+//       // const token = await AsyncStorage.getItem('auth.token')
+//       // console.log('token: ', token)
+//       if (token) {
+//         headers['x-token'] = token
+//       }
+//       return {
+//         headers
+//       }
+//     })
+//     return forward(operation)
+//   })
+//   // const token = await AsyncStorage.getItem('auth.token')
+// })
+const authMiddleware = setContext(async (req, { headers = {} }) => {
+  const token = await AsyncStorage.getItem('auth.token')
+  // console.log('token: ', token)
+  return {
+    headers: {
+      ...headers,
+      'x-token': token || ''
+    }
+  }
 })
 /**
  * LOCAL DATA
  */
 const defaults = {
-  language: {
-    value: 'JS',
-    __typename: 'ProgrammingLanguage'
+  session: {
+    me: null,
+    __typename: 'User'
   }
 }
 
 const resolvers = {
   Mutation: {
-    setLanguage: (_, { language }, { cache }) => {
-      const newLanguage = { value: language, __typename: 'ProgrammingLanguage' }
-      const data = { language: newLanguage }
+    setSession: (_, variables, { cache }) => {
+      const { session } = variables
+      const data = {
+        session: {
+          me: {
+            ...session.me,
+            __typename: 'User'
+          },
+          __typename: 'Session'
+        }
+      }
       cache.writeData({ data })
-      return newLanguage
+      return null
     }
   }
 }
@@ -78,7 +105,21 @@ const resolvers = {
 const stateLink = withClientState({
   cache: apolloCache,
   defaults,
-  resolvers
+  resolvers,
+  typeDefs: `
+    extend type Query {
+      getSession: Session!
+    }
+    Session {
+      me: User
+    }
+    User {
+      id: ID!
+      username: String!
+      email: String!
+      role: [String]
+    }
+  `
 })
 
 /**
@@ -100,8 +141,9 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
  * APOLLO CLIENT
  */
 const client = new ApolloClient({
-  link: ApolloLink.from([stateLink, errorLink, networkLink, terminatingLink]), // order matters
+  link: ApolloLink.from([stateLink, errorLink, authMiddleware, terminatingLink]), // order matters
   cache: apolloCache
 })
 
 export default client
+export { mutations, queries }

@@ -7,3 +7,8 @@ export const SIGN_IN = gql`
     }
   }
 `
+export const SET_LOCAL_SESSION = gql`
+  mutation($session: Session) {
+    setSession(session: $session) @client
+  }
+`

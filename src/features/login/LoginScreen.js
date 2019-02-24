@@ -5,13 +5,11 @@ import {
   View,
   TextInput,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  AsyncStorage
+  KeyboardAvoidingView
 } from 'react-native'
 import { Button } from 'react-native-elements'
 import { Mutation } from 'react-apollo'
-import client, { mutations, queries } from '../../client'
-import withSession from './withSession'
+import { mutations } from '../../client'
 import deviceStorage from '../../services/deviceStorage'
 import styles from './styles'
 
@@ -36,21 +34,8 @@ class LoginScreen extends Component {
           signIn: { token }
         }
       } = await signIn()
-      deviceStorage.saveKey('auth.token', token)
-      const tokenGet = await AsyncStorage.getItem('auth.token')
-      console.log('token: ', tokenGet)
-    } catch (error) {
-      console.log('error: ', error)
-    }
-  }
-
-  getMe = async () => {
-    try {
-      const { data } = await client.query({
-        query: queries.GET_ME,
-        fetchPolicy: 'no-cache'
-      })
-      console.log('data: ', data)
+      await deviceStorage.saveKey('auth.token', token)
+      await this.props.refetch()
     } catch (error) {
       console.log('error: ', error)
     }
@@ -92,7 +77,6 @@ class LoginScreen extends Component {
                     onPress={() => onLoginPress(signIn)}
                     title='Login'
                   />
-                  <Button buttonStyle={styles.loginButton} onPress={getMe} title='Get me' />
                 </View>
               </View>
             </TouchableWithoutFeedback>
@@ -103,4 +87,4 @@ class LoginScreen extends Component {
   }
 }
 
-export default withSession(LoginScreen)
+export default LoginScreen

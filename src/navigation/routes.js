@@ -1,4 +1,5 @@
 export default {
+  HOME_CONTAINER: 'HomeContainer',
   HOME: 'Home',
   LOGIN: 'Login',
   REPO_SELECTION: 'RepoSelection',

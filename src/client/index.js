@@ -17,6 +17,7 @@ import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
 import * as queries from './queries'
 import * as mutations from './mutations'
+import deviceStorage from '../services/deviceStorage'
 
 const apolloCache = new InMemoryCache()
 
@@ -47,22 +48,6 @@ const terminatingLink = split(
 )
 
 /* eslint-disable */
-// const networkLink = new ApolloLink((operation, forward) => {
-//   return AsyncStorage.getItem('auth.token').then((token) => {
-//     operation.setContext(async ({ headers = {} }) => {
-//       // const token = await AsyncStorage.getItem('auth.token')
-//       // console.log('token: ', token)
-//       if (token) {
-//         headers['x-token'] = token
-//       }
-//       return {
-//         headers
-//       }
-//     })
-//     return forward(operation)
-//   })
-//   // const token = await AsyncStorage.getItem('auth.token')
-// })
 const authMiddleware = setContext(async (req, { headers = {} }) => {
   const token = await AsyncStorage.getItem('auth.token')
   // console.log('token: ', token)
@@ -79,7 +64,7 @@ const authMiddleware = setContext(async (req, { headers = {} }) => {
 const defaults = {
   session: {
     me: null,
-    __typename: 'User'
+    __typename: 'Session'
   }
 }
 
@@ -128,14 +113,23 @@ const stateLink = withClientState({
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
-    graphQLErrors.forEach(({ message, locations, path }) => {
+    graphQLErrors.forEach(async ({ message, statusCode, locations, path }) => {
       console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`) // eslint-disable-line
+      if (statusCode === 401) {
+        console.log('signOut')
+        signOut()
+      }
     })
   }
   if (networkError) {
     console.log(`[Network error]: ${networkError}`) // eslint-disable-line
   }
 })
+
+const signOut = async () => {
+  await deviceStorage.saveKey('auth.token', '')
+  await client.resetStore(stateLink.writeDefaults())
+}
 
 /**
  * APOLLO CLIENT

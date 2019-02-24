@@ -13,5 +13,5 @@ export default {
   OBJECTIVE_C: 'Objective-C',
   SCALA: 'Scala',
   SWIFT: 'Swift',
-  TYPESCRIPT: 'TypeScript',
-};
+  TYPESCRIPT: 'TypeScript'
+}

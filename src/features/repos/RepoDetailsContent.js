@@ -1,6 +1,6 @@
-import React from 'react';
-import { TouchableOpacity } from 'react-native';
-import styled from 'styled-components';
+import React from 'react'
+import { TouchableOpacity } from 'react-native'
+import styled from 'styled-components'
 
 export default class RepoDetailsContent extends React.PureComponent {
   render() {
@@ -12,8 +12,8 @@ export default class RepoDetailsContent extends React.PureComponent {
       stargazers,
       createdAt,
       pushedAt,
-      updatedAt,
-    } = this.props;
+      updatedAt
+    } = this.props
     return (
       <React.Fragment>
         <AvatarContainer>
@@ -50,21 +50,21 @@ export default class RepoDetailsContent extends React.PureComponent {
           <BoldText>Last Update:</BoldText> {new Date(updatedAt).toDateString()}
         </ContentText>
       </React.Fragment>
-    );
+    )
   }
 }
 
 const ContentText = styled.Text`
   padding-bottom: 15px;
   font-size: 16px;
-`;
+`
 
 const ContentLink = styled.Text`
   padding-top: 15px;
   padding-bottom: 15px;
   font-size: 14px;
   color: blue;
-`;
+`
 
 const AvatarContainer = styled.View`
   justify-content: center;
@@ -72,13 +72,13 @@ const AvatarContainer = styled.View`
   padding: 15px;
   background: white;
   border-radius: 10px;
-`;
+`
 
 const Avatar = styled.Image`
   width: 100px;
   height: 100px;
-`;
+`
 
 const BoldText = styled.Text`
   font-weight: bold;
-`;
+`

@@ -1,9 +1,9 @@
-import Settings from './Settings';
+import Settings from './Settings'
 
-const settings = new Settings();
+const settings = new Settings()
 
 const stores = {
-  settings,
-};
+  settings
+}
 
-export default stores;
+export default stores

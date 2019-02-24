@@ -1,28 +1,28 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Heading1 } from '../../components/Headings';
-import { PrimaryButton } from '../../components/Buttons';
-import routes from '../../navigation/routes';
+import React from 'react'
+import styled from 'styled-components'
+import { Heading1 } from '../../components/Headings'
+import { PrimaryButton } from '../../components/Buttons'
+import routes from '../../navigation/routes'
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: 'Home',
-  };
+    title: 'Home'
+  }
 
   render() {
     return (
       <StyledView>
         <Logo>Githubber</Logo>
         <PrimaryButton
-          title="Most Popular Repos"
+          title='Most Popular Repos'
           onPress={() => this.props.navigation.navigate(routes.REPO_SELECTION)}
         />
         <PrimaryButton
-          title="MobX Stores"
+          title='MobX Stores'
           onPress={() => this.props.navigation.navigate(routes.COUNTER_MOBX)}
         />
       </StyledView>
-    );
+    )
   }
 }
 
@@ -32,10 +32,10 @@ const StyledView = styled.View`
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
-`;
+`
 
 const Logo = styled(Heading1)`
   padding: 10px;
-`;
+`
 
-export default HomeScreen;
+export default HomeScreen

@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from 'graphql-tag'
 
 export const GET_REPOSITORIES = gql`
   query GetRepositiories($byLanguage: String!) {
@@ -25,7 +25,7 @@ export const GET_REPOSITORIES = gql`
       }
     }
   }
-`;
+`
 
 export const GET_LANGUAGE = gql`
   {
@@ -33,7 +33,7 @@ export const GET_LANGUAGE = gql`
       value
     }
   }
-`;
+`
 
 export const SET_LANGUAGE = gql`
   mutation SetLanguage($language: String!) {
@@ -41,7 +41,7 @@ export const SET_LANGUAGE = gql`
       language
     }
   }
-`;
+`
 
 export const ADD_STAR = gql`
   mutation AddStar($input: AddStarInput!) {
@@ -55,4 +55,4 @@ export const ADD_STAR = gql`
       }
     }
   }
-`;
+`

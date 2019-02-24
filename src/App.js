@@ -1,17 +1,17 @@
 // @flow
-import React from 'react';
-import { ApolloProvider } from 'react-apollo';
-import { persistCache } from 'apollo-cache-persist';
-import { AsyncStorage } from 'react-native';
-import { Provider } from 'mobx-react';
-import AppContainer from './navigation/AppContainer';
-import client from './client';
-import stores from './stores';
+import React from 'react'
+import { ApolloProvider } from 'react-apollo'
+import { persistCache } from 'apollo-cache-persist'
+import { AsyncStorage } from 'react-native'
+import { Provider } from 'mobx-react'
+import AppContainer from './navigation/AppContainer'
+import client from './client'
+import stores from './stores'
 
 class App extends React.Component {
   state = {
-    isCacheLoaded: false,
-  };
+    isCacheLoaded: false
+  }
 
   async componentDidMount() {
     try {
@@ -20,30 +20,30 @@ class App extends React.Component {
         cache: client.cache,
         storage: AsyncStorage,
         key: 'githubber-app',
-        debug: true,
-      });
+        debug: true
+      })
     } catch (err) {
-      console.error('Error attempting to restore the apollo cache', err); // eslint-disable-line
+      console.error('Error attempting to restore the apollo cache', err) // eslint-disable-line
     }
 
     this.setState({
-      isCacheLoaded: true,
-    });
+      isCacheLoaded: true
+    })
   }
 
   render() {
     if (!this.state.isCacheLoaded) {
-      return null;
+      return null
     }
 
     return (
-      <Provider stores={stores} >
+      <Provider stores={stores}>
         <ApolloProvider client={client}>
           <AppContainer />
         </ApolloProvider>
       </Provider>
-    );
+    )
   }
 }
 
-export default App;
+export default App

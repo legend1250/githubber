@@ -25,11 +25,11 @@ class HomeContainer extends Component {
 
   render() {
     const { session, refetch, navigation } = this.props
-    // console.log('props: ', this.props)
+    console.log('props: ', this.props)
     // console.log('session: ', this.props.session)
 
     if (session && session.me) {
-      return <HomeScreen navigation={navigation} />
+      return <HomeScreen navigation={navigation} refetch={refetch} />
     }
 
     return <LoginScreen refetch={refetch} />

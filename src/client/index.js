@@ -142,4 +142,4 @@ const client = new ApolloClient({
 })
 
 export default client
-export { mutations, queries }
+export { mutations, queries, signOut }

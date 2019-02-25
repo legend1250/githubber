@@ -3,24 +3,34 @@ import styled from 'styled-components'
 import { Heading1 } from '../../components/Headings'
 import { PrimaryButton } from '../../components/Buttons'
 import routes from '../../navigation/routes'
+import { signOut } from '../../client'
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
     title: 'Home'
   }
 
+  handleLogout = async () => {
+    await signOut()
+    await this.props.refetch()
+  }
+
   render() {
+    const { handleLogout } = this
+
     return (
       <StyledView>
         <Logo>Githubber</Logo>
-        <PrimaryButton
+        {/* <PrimaryButton
           title='Most Popular Repos'
           onPress={() => this.props.navigation.navigate(routes.REPO_SELECTION)}
-        />
-        <PrimaryButton
-          title='MobX Stores'
-          onPress={() => this.props.navigation.navigate(routes.COUNTER_MOBX)}
-        />
+        /> */}
+        <PrimaryButton onPress={() => this.props.navigation.navigate(routes.COUNTER_MOBX)}>
+          <ButtonText>MobX Stores</ButtonText>
+        </PrimaryButton>
+        <PrimaryButton onPress={handleLogout} size='large'>
+          <ButtonText>Log out</ButtonText>
+        </PrimaryButton>
       </StyledView>
     )
   }
@@ -36,6 +46,13 @@ const StyledView = styled.View`
 
 const Logo = styled(Heading1)`
   padding: 10px;
+`
+
+const ButtonText = styled.Text`
+  font-family: 'Roboto';
+  color: white;
+  font-size: 16px;
+  text-align: center;
 `
 
 export default HomeScreen

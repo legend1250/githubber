@@ -20,7 +20,8 @@ class App extends React.Component {
         cache: client.cache,
         storage: AsyncStorage,
         key: 'githubber-app',
-        debug: true
+        debug: true,
+        trigger: false
       })
     } catch (err) {
       console.error('Error attempting to restore the apollo cache', err) // eslint-disable-line

@@ -11,6 +11,8 @@ const setSession = gql`
 
 class AuthLoadingScreen extends Component {
   componentDidMount = async () => {
+    const { navigate } = this.props.navigation
+
     try {
       const { data } = await client.query({
         query: queries.GET_ME,
@@ -22,13 +24,13 @@ class AuthLoadingScreen extends Component {
           mutation: setSession,
           variables: { session: data }
         })
-        this.props.navigation.navigate('App')
+        navigate('App')
       } else {
-        this.props.navigation.navigate('Auth')
+        navigate('Auth')
       }
     } catch (error) {
       console.log('error: ', error)
-      this.props.navigation.navigate('Auth')
+      navigate('Auth')
     }
   }
 

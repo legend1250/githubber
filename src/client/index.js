@@ -99,6 +99,11 @@ const stateLink = withClientState({
       username: String!
       email: String!
       role: [String]
+      departments: [Department]
+    }
+    Department {
+      id: ID!
+      name: String!
     }
   `
 })

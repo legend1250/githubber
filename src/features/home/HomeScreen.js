@@ -3,11 +3,18 @@ import styled from 'styled-components'
 import { Heading1 } from '../../components/Headings'
 import { PrimaryButton } from '../../components/Buttons'
 import routes from '../../navigation/routes'
-import { signOut } from '../../client'
+import client, { signOut, queries } from '../../client'
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
     title: 'Home'
+  }
+
+  componentDidMount = async () => {
+    const {
+      data: { session }
+    } = await client.query({ query: queries.GET_LOCAL_SESSION })
+    console.log('session: ', session)
   }
 
   handleLogout = async () => {

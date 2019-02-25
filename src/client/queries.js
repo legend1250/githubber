@@ -16,12 +16,15 @@ const GET_ME = gql`
 `
 
 const GET_LOCAL_SESSION = gql`
-  query getSession {
-    me @client {
-      id
-      username
-      email
-      role
+  {
+    session @client {
+      me {
+        id
+        username
+        email
+        role
+        departments
+      }
     }
   }
 `

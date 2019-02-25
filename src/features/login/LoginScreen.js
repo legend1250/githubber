@@ -34,8 +34,9 @@ class LoginScreen extends Component {
           signIn: { token }
         }
       } = await signIn()
+      // console.log('token: ', token)
       await deviceStorage.saveKey('auth.token', token)
-      await this.props.refetch()
+      this.props.navigation.navigate('App')
     } catch (error) {
       console.log('error: ', error)
     }

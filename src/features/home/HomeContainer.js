@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import client from '../../client'
 import HomeScreen from './HomeScreen'
 import LoginScreen from '../login/LoginScreen'
@@ -9,7 +9,7 @@ const setSession = gql`
     setSession(session: $session) @client
   }
 `
-class HomeContainer extends Component {
+class HomeContainer extends PureComponent {
   componentDidMount = () => {
     const { session } = this.props
     client.mutate({
@@ -23,7 +23,7 @@ class HomeContainer extends Component {
     // console.log('props: ', this.props)
 
     if (session && session.me) {
-      return <HomeScreen navigation={navigation} refetch={refetch} />
+      return <HomeScreen navigation={navigation} refetch={refetch} session={session.me} />
     }
 
     return <LoginScreen refetch={refetch} />

@@ -5,7 +5,7 @@ import { queries } from '../../client'
 import Loading from '../../components/Loading'
 
 const withSession = (Component) => (props) => (
-  <Query query={queries.GET_ME}>
+  <Query query={queries.GET_ME} fetchPolicy='cache-and-network'>
     {({ data, error, loading, refetch }) => {
       // console.log('withSession: ', JSON.stringify({ data, error, loading }))
       if (loading) {

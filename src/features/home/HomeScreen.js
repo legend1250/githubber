@@ -1,7 +1,7 @@
 import React from 'react'
+import { View } from 'react-native'
 import styled from 'styled-components'
-import { Heading1 } from '../../components/Headings'
-import { PrimaryButton } from '../../components/Buttons'
+import { Button } from 'react-native-elements'
 import routes from '../../navigation/routes'
 import client, { signOut, queries } from '../../client'
 
@@ -10,56 +10,67 @@ class HomeScreen extends React.Component {
     title: 'Home'
   }
 
-  componentDidMount = async () => {
-    const {
-      data: { session }
-    } = await client.query({ query: queries.GET_LOCAL_SESSION })
-    console.log('session: ', session)
-  }
+  componentDidMount = async () => {}
 
   handleLogout = async () => {
     await signOut()
     await this.props.refetch()
   }
 
+  getMe = async () => {
+    const {
+      data: { session }
+    } = await client.query({ query: queries.GET_LOCAL_SESSION })
+    console.log('session: ', session)
+  }
+
   render() {
-    const { handleLogout } = this
+    const {
+      handleLogout,
+      props: {
+        session: { username, email }
+      }
+    } = this
 
     return (
       <StyledView>
-        <Logo>Githubber</Logo>
-        {/* <PrimaryButton
-          title='Most Popular Repos'
-          onPress={() => this.props.navigation.navigate(routes.REPO_SELECTION)}
-        /> */}
-        <PrimaryButton onPress={() => this.props.navigation.navigate(routes.COUNTER_MOBX)}>
-          <ButtonText>MobX Stores</ButtonText>
-        </PrimaryButton>
-        <PrimaryButton onPress={handleLogout} size='large'>
-          <ButtonText>Log out</ButtonText>
-        </PrimaryButton>
+        <UsrText>
+          Username: <BoldText>{username}</BoldText>
+        </UsrText>
+        <UsrText>
+          Email: <BoldText>{email}</BoldText>
+        </UsrText>
+        <View style={{ flex: 1, paddingTop: 30 }}>
+          <ButtonStyled
+            title='MobX Stores'
+            onPress={() => this.props.navigation.navigate(routes.COUNTER_MOBX)}
+          />
+          <ButtonStyled title='Log out' onPress={handleLogout} />
+        </View>
       </StyledView>
     )
   }
 }
 
 const StyledView = styled.View`
-  background-color: powderblue;
   flex: 1;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: center;
 `
 
-const Logo = styled(Heading1)`
-  padding: 10px;
-`
-
-const ButtonText = styled.Text`
-  font-family: 'Roboto';
-  color: white;
-  font-size: 16px;
+const UsrText = styled.Text`
+  font-size: 14px;
+  margin-top: 30px;
   text-align: center;
+`
+const BoldText = styled.Text`
+  font-weight: 700;
+`
+
+const ButtonStyled = styled(Button)`
+  margin-left: 15px;
+  margin-right: 15px;
+  border-radius: 5px;
+  height: 45px;
+  margin-top: 10px;
 `
 
 export default HomeScreen

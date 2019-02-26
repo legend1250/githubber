@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import { Button } from 'react-native-elements'
 import { Mutation } from 'react-apollo'
-import { mutations } from '../../client'
+import client, { mutations, queries } from '../../client'
 import deviceStorage from '../../services/deviceStorage'
 import styles from './styles'
 
@@ -36,6 +36,17 @@ class LoginScreen extends Component {
       } = await signIn()
       // console.log('token: ', token)
       await deviceStorage.saveKey('auth.token', token)
+      const { data } = await client.query({
+        query: queries.GET_ME,
+        fetchPolicy: 'network-only'
+      })
+      // console.log('session: ', data)
+      if (data && data.me) {
+        await client.mutate({
+          mutation: mutations.SET_LOCAL_SESSION,
+          variables: { session: data }
+        })
+      }
       this.props.navigation.navigate('App')
     } catch (error) {
       console.log('error: ', error)
